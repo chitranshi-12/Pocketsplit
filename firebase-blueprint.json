@@ -1,0 +1,140 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "upiId": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "currency"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Shared expense group",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "type": { "type": "string", "enum": ["Trip", "Home", "Couple", "Other"] },
+        "emoji": { "type": "string", "maxLength": 10 },
+        "color": { "type": "string", "maxLength": 20 },
+        "createdBy": { "type": "string" },
+        "memberIds": { "type": "array" },
+        "members": { "type": "array" },
+        "simplifyDebts": { "type": "boolean" },
+        "inviteCode": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "type", "createdBy", "memberIds"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Recorded expense within a group",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "groupId": { "type": "string" },
+        "description": { "type": "string", "maxLength": 200 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "category": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string" },
+        "paidBy": { "type": "array" },
+        "splitType": { "type": "string", "enum": ["equal", "exact", "percentage", "shares", "adjustment"] },
+        "splitDetails": { "type": "array" },
+        "participantIds": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "receiptUrl": { "type": "string" },
+        "recurring": { "type": "string", "enum": ["none", "daily", "weekly", "monthly", "yearly"] },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["groupId", "description", "amount", "category", "date", "paidBy", "splitType", "participantIds", "createdBy"]
+    },
+    "Settlement": {
+      "title": "Settlement",
+      "description": "Debt settlement payment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "groupId": { "type": "string" },
+        "fromMemberId": { "type": "string" },
+        "toMemberId": { "type": "string" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "date": { "type": "string" },
+        "paymentMethod": { "type": "string", "maxLength": 50 },
+        "reference": { "type": "string", "maxLength": 200 },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["groupId", "fromMemberId", "toMemberId", "amount", "date", "createdBy"]
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "Log of user actions and audit trail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "groupId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "type": { "type": "string", "maxLength": 50 },
+        "message": { "type": "string", "maxLength": 300 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["groupId", "userId", "userName", "type", "message", "timestamp"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Comment on an expense",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "groupId": { "type": "string" },
+        "expenseId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userAvatar": { "type": "string", "maxLength": 500 },
+        "text": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["groupId", "expenseId", "userId", "userName", "text", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and settings"
+    },
+    "/groups/{groupId}": {
+      "schema": "Group",
+      "description": "Expense groups"
+    },
+    "/groups/{groupId}/expenses/{expenseId}": {
+      "schema": "Expense",
+      "description": "Expenses under a group"
+    },
+    "/groups/{groupId}/settlements/{settlementId}": {
+      "schema": "Settlement",
+      "description": "Settlement records under a group"
+    },
+    "/groups/{groupId}/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "Activity logs under a group"
+    },
+    "/groups/{groupId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Comments on expenses in a group"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Pocketsplit",
+  "description": "Split bills, not friendships. Expense sharing app for friends, roommates, trips and couples with smart debt simplification and UPI settlement.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
